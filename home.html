@@ -1,9 +1,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="compiled/flipclock.css">
-
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-
 		<script src="compiled/flipclock.js"></script>
 	</head>
 	<body>
@@ -23,17 +21,13 @@
         if (minsValue != null && minsValue.length > 1) {
           minutes = parseInt(minsValue[1]);
         } else {
-          minutes = 15;
+          minutes = 60;
         }
         var currentTimeInSeconds = (currentDate.getTime() / 1000);
 				var diff = currentTimeInSeconds - currentTimeInSeconds + (minutes * 60);
 
 				// Instantiate a coutdown FlipClock
-				clock = $('.clock').FlipClock(diff, {
-					clockFace: 'DailyCounter',
-					countdown: true,
-					showSeconds: true
-				});
+				clock = $('.clock').FlipClock(diff, { countdown: true });
 			});
 		</script>
 	</body>
