@@ -1,34 +1,49 @@
 <html>
-	<head>
-		<link rel="stylesheet" href="compiled/flipclock.css">
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script src="compiled/flipclock.js"></script>
-	</head>
-	<body>
-		<div class="clock" style="margin:2em;"></div>
+  <head>
+    <link rel="stylesheet" href="compiled/flipclock.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="compiled/flipclock.js"></script>
+  </head>
+  <body>
+    <div class="clock" style="margin:2em;"></div>
 
-		<script type="text/javascript">
-			var clock;
+    <script type="text/javascript">
+      var clock;
 
-			$(document).ready(function() {
+      function parseTime( t ) {
+        var d = new Date();
+        var time = t.match( /(\d+)(?::(\d\d))?\s*(p?)/ );
+        d.setHours( parseInt( time[1]) + (time[3] ? 12 : 0) );
+        d.setMinutes( parseInt( time[2]) || 0 );
+        return d;
+      }
 
-				// Grab the current date
-				var currentDate = new Date();
+      $(document).ready(function() {
 
-				// Calculate the difference in seconds between the future and current date
-        var minsValue = location.search.match(/minutes=(\d+)/);
+        var diff;
+        // Grab the current date
+        var currentDate = new Date();
+        var currentTimeInSeconds = (currentDate.getTime() / 1000);
+
+        var params = new URLSearchParams(location.search);
+        // Calculate the difference in seconds between the future and current date
+        var minsValue = params.get('minutes');
+        var timeValue = params.get('time');
 
         if (minsValue != null && minsValue.length > 1) {
           minutes = parseInt(minsValue[1]);
+          diff = currentTimeInSeconds - currentTimeInSeconds + (minutes * 60);
+        } else if (timeValue != null) {
+          var dateTime = parseTime(timeValue);
+          diff = (dateTime - currentDate) / 1000;
         } else {
           minutes = 60;
+          diff = currentTimeInSeconds - currentTimeInSeconds + (minutes * 60);
         }
-        var currentTimeInSeconds = (currentDate.getTime() / 1000);
-				var diff = currentTimeInSeconds - currentTimeInSeconds + (minutes * 60);
 
-				// Instantiate a coutdown FlipClock
-				clock = $('.clock').FlipClock(diff, { countdown: true });
-			});
-		</script>
-	</body>
+        // Instantiate a coutdown FlipClock
+        clock = $('.clock').FlipClock(diff, { countdown: true });
+      });
+    </script>
+  </body>
 </html>
